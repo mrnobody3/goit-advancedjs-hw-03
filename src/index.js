@@ -20,11 +20,22 @@ const select = new SlimSelect({
       showEl(refs.loaderEl);
       fetchCatByBreed(newVal[0]?.value || oldVal[0]?.value)
         .then(({ data }) => {
-          refs.catInfoEl.innerHTML = markup({
-            url: data[0]?.url,
-            name: data[0]?.breeds[0]?.name,
-            desc: data[0]?.breeds[0]?.description,
-            temp: data[0]?.breeds[0]?.temperament,
+          if (data.length) {
+            refs.catInfoEl.innerHTML = markup({
+              url: data[0]?.url,
+              name: data[0]?.breeds[0]?.name,
+              desc: data[0]?.breeds[0]?.description,
+              temp: data[0]?.breeds[0]?.temperament,
+            });
+            return;
+          }
+          refs.catInfoEl.innerHTML = '';
+
+          iziToast.show({
+            title: 'Error',
+            message: 'Oops! Something went wrong! Try other one!',
+            color: 'red',
+            position: 'topRight',
           });
         })
         .catch(e => {
